@@ -110,6 +110,11 @@ BOOL inject(const char *dllPath, const DWORD pid)
 
 BOOL injectX86Only(const char *dllPath, const DWORD pid)
 {
+    if(!dllPath)
+    {
+        return FALSE;
+    }
+
     if (!setPrivilegeIfModeAdmin() && GetLastError() != (unsigned)ERROR_SUCCESS)
     {
         return FALSE;
