@@ -18,5 +18,56 @@ The injector uses the offset of the virtual address to find the Wow64 address of
     
 Supported OS: Win7 - Win10 x86 x64
 
+# Using
+
+``` c++
+#include <iostream>
+#include <memory>
+
+#include <Windows.h>
+
+using inject_func = BOOL(__cdecl*)(char const* dllPath, DWORD pid);
+using error_func = DWORD(__cdecl*)();
+
+int main() {
+	
+	try
+	{
+		std::unique_ptr<HINSTANCE__, decltype(&::FreeLibrary)> const p_library
+		{
+			::LoadLibrary(TEXT("Injector.dll")),
+			::FreeLibrary
+		};
+
+		if (!p_library)
+		{
+			return EXIT_FAILURE;
+		}
+
+		auto const inject = reinterpret_cast<inject_func>(::GetProcAddress(p_library.get(), "inject"));
+		auto const get_error = reinterpret_cast<error_func>(::GetProcAddress(p_library.get(), "getError"));
+
+		if(!inject || !get_error)
+		{
+			return EXIT_FAILURE;
+		}
+
+		if (!inject("path_to_dll", 0))
+		{
+			std::cerr << get_error() << std::endl;
+			return EXIT_FAILURE;
+		}
+	}
+	catch (std::exception const& error)
+	{
+		std::cerr << error.what() << std::endl;
+	}
+	
+}
+
+
+```
+
+
 # License
 Injector is licensed under the MIT License. Dependencies are under their respective licenses.
