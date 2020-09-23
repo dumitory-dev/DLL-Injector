@@ -5,7 +5,6 @@
 // Based on https://github.com/iamclint/libinj
 
 #include "Injector.h"
-#include "Utils.h"
 
 #include <Psapi.h>
 #include <TlHelp32.h>

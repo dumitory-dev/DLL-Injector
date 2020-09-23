@@ -1,5 +1,7 @@
 #pragma once
 #include <Windows.h>
+#include "Utils.h"
+
 
 #ifdef __cplusplus
 EXTERN_C_START
@@ -7,15 +9,16 @@ EXTERN_C_START
 
 LPTHREAD_START_ROUTINE getCorrectLoadLibrary(HANDLE hProcess);
 
-BOOL injectX86X64(const char *dllPath, DWORD pid);
-BOOL injectX86(const char *dllPath, DWORD pid);
-BOOL inject(const char *dllPath, DWORD pid);
+DLLIMPORT_EXPORT BOOL injectX86X64(const char *dllPath, DWORD pid);
+DLLIMPORT_EXPORT BOOL injectX86(const char *dllPath, DWORD pid);
+DLLIMPORT_EXPORT BOOL inject(const char *dllPath, DWORD pid);
 
-SIZE_T getFunctionAddress32(const char *moduleName, const char *functionName,
+DLLIMPORT_EXPORT SIZE_T getFunctionAddress32(const char *moduleName, const char *functionName,
                            HANDLE hProcess);
-SIZE_T getBaseAddress(DWORD pid);
-SIZE_T getModuleBase(HANDLE hProcess, const char *moduleName);
-DWORD getError(VOID);
+DLLIMPORT_EXPORT SIZE_T getBaseAddress(DWORD pid);
+DLLIMPORT_EXPORT SIZE_T getModuleBase(HANDLE hProcess, const char *moduleName);
+
+DLLIMPORT_EXPORT DWORD getError(VOID);
 
 #ifdef __cplusplus
 EXTERN_C_END
