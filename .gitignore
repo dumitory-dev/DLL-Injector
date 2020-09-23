@@ -96,8 +96,12 @@ StyleCopReport.xml
 # Chutzpah Test files
 _Chutzpah*
 
+#build
+out/
+
 # Visual C++ cache files
 ipch/
+temporary/
 *.aps
 *.ncb
 *.opendb
