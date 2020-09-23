@@ -1,12 +1,14 @@
-// Injector.cpp : This file contains the 'main' function. Program execution
+﻿// Injector.cpp : This file contains the 'main' function. Program execution
 // begins and ends there.
 //
 
 #include <iostream>
-
+#include "Injector.h"
 int main()
 {
-    std::cout << "Hello World!\n";
+   bool res = inject("C:\\Users\\Dmitry\\Desktop\\хук.dll", 6080);
+   std::cout << std::boolalpha << res;
+
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
