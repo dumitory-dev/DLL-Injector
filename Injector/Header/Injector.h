@@ -7,8 +7,9 @@ EXTERN_C_START
 
 LPTHREAD_START_ROUTINE getCorrectLoadLibrary(HANDLE hProcess);
 
+BOOL injectX86X64(const char *dllPath, DWORD pid);
+BOOL injectX86Only(const char *dllPath, DWORD pid);
 BOOL inject(const char *dllPath, DWORD pid);
-BOOL injectX86Only(const char *dllPath, const DWORD pid);
 
 SIZE_T getFunctionAddress32(const char *moduleName, const char *functionName,
                            HANDLE hProcess);

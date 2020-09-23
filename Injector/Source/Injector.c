@@ -76,7 +76,7 @@ LPTHREAD_START_ROUTINE getCorrectLoadLibrary(HANDLE hProcess)
     return (LPTHREAD_START_ROUTINE)GetProcAddress(hKernel32, "LoadLibraryA");
 }
 
-BOOL inject(const char *dllPath, const DWORD pid)
+BOOL injectX86X64(const char *dllPath, const DWORD pid)
 {
     if (dllPath == NULL)
     {
@@ -110,7 +110,7 @@ BOOL inject(const char *dllPath, const DWORD pid)
 
 BOOL injectX86Only(const char *dllPath, const DWORD pid)
 {
-    if(!dllPath)
+    if (!dllPath)
     {
         return FALSE;
     }
@@ -137,8 +137,14 @@ BOOL injectX86Only(const char *dllPath, const DWORD pid)
     return res;
 }
 
+BOOL inject(const char *dllPath, DWORD pid)
+{
+    return is32Bit(GetCurrentProcess()) ? injectX86Only(dllPath, pid)
+                                        : injectX86X64(dllPath, pid);
+}
+
 SIZE_T getFunctionAddress32(const char *moduleName, const char *functionName,
-                           HANDLE hProcess)
+                            HANDLE hProcess)
 {
     // see https://afly.co/x663
 
@@ -160,9 +166,9 @@ SIZE_T getFunctionAddress32(const char *moduleName, const char *functionName,
         return 0;
     }
 
-    if (!ReadProcessMemory(hProcess,
-                           (LPVOID)((size_t)modBase + (DWORD)dosHeaders.e_lfanew),
-                           (LPVOID)&ntHeaders, sizeof(IMAGE_NT_HEADERS32), 0))
+    if (!ReadProcessMemory(
+            hProcess, (LPVOID)((size_t)modBase + (DWORD)dosHeaders.e_lfanew),
+            (LPVOID)&ntHeaders, sizeof(IMAGE_NT_HEADERS32), 0))
     {
         return 0;
     }
@@ -172,7 +178,7 @@ SIZE_T getFunctionAddress32(const char *moduleName, const char *functionName,
             (LPVOID)((SIZE_T)ntHeaders.OptionalHeader
                          .DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT]
                          .VirtualAddress +
-                         modBase),
+                     modBase),
             (LPVOID)(&exportDirectory), sizeof(IMAGE_EXPORT_DIRECTORY), 0))
     {
         return 0;
@@ -185,7 +191,7 @@ SIZE_T getFunctionAddress32(const char *moduleName, const char *functionName,
         DWORD currentFunctionVirtualAddress;
 
         char currentFunctionName[61] = {'\0'};
-       
+
         if (!ReadProcessMemory(hProcess,
                                (LPVOID)((SIZE_T)modBase +
                                         exportDirectory.AddressOfNames +
