@@ -1,4 +1,4 @@
-# Simple Injector
+# Simple DLL Injector
 
 ### Appointment
 This simple injector is for injecting DLL into processes.
