@@ -108,7 +108,7 @@ BOOL injectX86X64(const char *dllPath, const DWORD pid)
     return res;
 }
 
-BOOL injectX86Only(const char *dllPath, const DWORD pid)
+BOOL injectX86(const char *dllPath, const DWORD pid)
 {
     if (!dllPath)
     {
@@ -139,7 +139,7 @@ BOOL injectX86Only(const char *dllPath, const DWORD pid)
 
 BOOL inject(const char *dllPath, DWORD pid)
 {
-    return is32Bit(GetCurrentProcess()) ? injectX86Only(dllPath, pid)
+    return is32Bit(GetCurrentProcess()) ? injectX86(dllPath, pid)
                                         : injectX86X64(dllPath, pid);
 }
 
