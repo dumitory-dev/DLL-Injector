@@ -21,9 +21,10 @@ Supported OS: Win7 - Win10 x86 x64
 # Using
 
 ``` c++
-#include <Windows.h>
-#include <memory>
 #include <iostream>
+#include <memory>
+
+#include <Windows.h>
 
 using inject_func = BOOL(__cdecl*)(char const* dllPath, DWORD pid);
 using error_func = DWORD(__cdecl*)();
