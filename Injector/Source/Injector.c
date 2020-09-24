@@ -98,6 +98,7 @@ BOOL injectX86X64(const char *dllPath, const DWORD pid)
 
     if (!correctLoadLibrary)
     {
+        CloseHandle(hProcess);
         return FALSE;
     }
 
@@ -120,6 +121,12 @@ BOOL injectX86(const char *dllPath, const DWORD pid)
     }
 
     HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
+
+    if(!hProcess)
+    {
+        return FALSE;
+    }
+
     HMODULE hKernel32 = GetModuleHandle(TEXT("kernel32.dll"));
 
     if (!hKernel32)
@@ -130,6 +137,12 @@ BOOL injectX86(const char *dllPath, const DWORD pid)
 
     const LPTHREAD_START_ROUTINE correctLoadLibrary =
         (LPTHREAD_START_ROUTINE)GetProcAddress(hKernel32, "LoadLibraryA");
+
+    if(!correctLoadLibrary)
+    {
+        CloseHandle(hProcess);
+        return FALSE;
+    }
 
     const BOOL res = privateInject(dllPath, correctLoadLibrary, hProcess);
     CloseHandle(hProcess);
